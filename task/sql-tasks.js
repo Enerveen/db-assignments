@@ -112,7 +112,6 @@ async function task_1_5(db) {
         WHERE ProductName REGEXP '^[A-F]'
         ORDER BY ProductName
     `);
-    //Tried to solve with "WHERE ProductName LIKE '[A-F]%' but it didn't work for some reason
     return result[0];
 }
 
@@ -174,7 +173,7 @@ async function task_1_8(db) {
     let result = await db.query(`
         SELECT 
             Categories.CategoryName AS 'CategoryName',
-            COUNT(Products.CategoryID) AS 'TotalNumberOfProducts'
+            COUNT(Products.ProductID) AS 'TotalNumberOfProducts'
         FROM Products
         INNER JOIN Categories ON Products.CategoryID = Categories.CategoryID
         GROUP BY CategoryName
@@ -451,7 +450,8 @@ async function task_1_21(db) {
         SUM(UnitPrice*Quantity) AS 'Maximum Purchase Amount, $'
     FROM \`OrderDetails\` 
     GROUP BY OrderID 
-    ORDER BY \`Maximum Purchase Amount, $\` DESC LIMIT 1;
+    ORDER BY \`Maximum Purchase Amount, $\` DESC
+    LIMIT 1
     `);
     return result[0];
 }
@@ -464,8 +464,24 @@ async function task_1_21(db) {
  * @return {array}
  */
 async function task_1_22(db) {
-    throw new Error ('Not implemented')
     let result = await db.query(`
+        SELECT DISTINCT
+            ac.CompanyName,
+            Products.ProductName AS 'ProductName',
+            OrderDetails.UnitPrice AS 'PricePerItem'
+        FROM Customers ac
+        INNER JOIN Orders ON Orders.CustomerID = ac.CustomerID
+        INNER JOIN OrderDetails ON OrderDetails.OrderID = Orders.OrderID
+        INNER JOIN Products ON Products.ProductID = OrderDetails.ProductID
+        WHERE OrderDetails.UnitPrice = (
+            SELECT 
+                MAX(OrderDetails.UnitPrice) 
+            FROM Customers bc
+            INNER JOIN Orders ON Orders.CustomerID = bc.CustomerID
+            INNER JOIN OrderDetails ON OrderDetails.OrderID = Orders.OrderID
+            WHERE bc.CompanyName = ac.CompanyName
+        )
+        ORDER BY PricePerItem DESC, CompanyName, ProductName;
     `);
     return result[0];
 }
