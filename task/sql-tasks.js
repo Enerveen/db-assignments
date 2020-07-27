@@ -466,20 +466,20 @@ async function task_1_21(db) {
 async function task_1_22(db) {
     let result = await db.query(`
         SELECT DISTINCT
-            ac.CompanyName,
+            a.CompanyName,
             Products.ProductName AS 'ProductName',
             OrderDetails.UnitPrice AS 'PricePerItem'
-        FROM Customers ac
-        INNER JOIN Orders ON Orders.CustomerID = ac.CustomerID
+        FROM Customers a
+        INNER JOIN Orders ON Orders.CustomerID = a.CustomerID
         INNER JOIN OrderDetails ON OrderDetails.OrderID = Orders.OrderID
         INNER JOIN Products ON Products.ProductID = OrderDetails.ProductID
         WHERE OrderDetails.UnitPrice = (
             SELECT 
                 MAX(OrderDetails.UnitPrice) 
-            FROM Customers bc
-            INNER JOIN Orders ON Orders.CustomerID = bc.CustomerID
+            FROM Customers b
+            INNER JOIN Orders ON Orders.CustomerID = b.CustomerID
             INNER JOIN OrderDetails ON OrderDetails.OrderID = Orders.OrderID
-            WHERE bc.CompanyName = ac.CompanyName
+            WHERE b.CompanyName = a.CompanyName
         )
         ORDER BY PricePerItem DESC, CompanyName, ProductName;
     `);
