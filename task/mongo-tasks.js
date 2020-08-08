@@ -302,7 +302,7 @@ async function task_1_8(db) {
  * order by CustomerID
  */
 async function task_1_9(db) {
-  let result = await db
+  const result = await db
     .collection('customers')
     .aggregate([
       { $match: { ContactName: /^F..n/ } },
@@ -324,7 +324,21 @@ async function task_1_9(db) {
  * order by ProductID
  */
 async function task_1_10(db) {
-  throw new Error('Not implemented');
+  const result = await db
+    .collection('products')
+    .aggregate([
+      { $match: { Discontinued: 1 } },
+      {
+        $project: {
+          _id: 0,
+          ProductID: 1,
+          ProductName: 1,
+        },
+      },
+      { $sort: { ProductID: 1 } },
+    ])
+    .toArray();
+  return result;
 }
 
 /**
@@ -334,7 +348,21 @@ async function task_1_10(db) {
  * Order by UnitPrice then by ProductName
  */
 async function task_1_11(db) {
-  throw new Error('Not implemented');
+  const result = await db
+    .collection('products')
+    .aggregate([
+      { $match: { UnitPrice: { $lte: 15, $gte: 5 } } },
+      {
+        $project: {
+          _id: 0,
+          ProductName: 1,
+          UnitPrice: 1,
+        },
+      },
+      { $sort: { UnitPrice: 1, ProductName: 1 } },
+    ])
+    .toArray();
+  return result;
 }
 
 /**
@@ -344,7 +372,22 @@ async function task_1_11(db) {
  * Order products by price (asc) then by ProductName.
  */
 async function task_1_12(db) {
-  throw new Error('Not implemented');
+  const result = await db
+    .collection('products')
+    .aggregate([
+      {
+        $project: {
+          _id: 0,
+          ProductName: 1,
+          UnitPrice: 1,
+        },
+      },
+      { $sort: { UnitPrice: -1 } },
+      { $limit: 20 },
+      { $sort: { UnitPrice: 1, ProductName: 1 } },
+    ])
+    .toArray();
+  return result;
 }
 
 /**
@@ -354,7 +397,26 @@ async function task_1_12(db) {
  * HINT: That's acceptable to make it in 2 queries
  */
 async function task_1_13(db) {
-  throw new Error('Not implemented');
+  const result = await db
+    .collection('products')
+    .aggregate([
+      {
+        $group: {
+          _id: 0,
+          TotalOfCurrentProducts: { $sum: 1 },
+          TotalOfDiscontinuedProducts: { $sum: { $cond: [{ $eq: ['$Discontinued', 1] }, 1, 0] } },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          TotalOfCurrentProducts: 1,
+          TotalOfDiscontinuedProducts: 1,
+        },
+      },
+    ])
+    .toArray();
+  return result[0];
 }
 
 /**
@@ -366,7 +428,22 @@ async function task_1_13(db) {
  *       https://docs.mongodb.com/manual/reference/operator/query/expr/#op._S_expr
  */
 async function task_1_14(db) {
-  throw new Error('Not implemented');
+  const result = await db
+    .collection('products')
+    .aggregate([
+      { $match: { $expr: { $lt: ['$UnitsInStock', '$UnitsOnOrder'] } } },
+      {
+        $project: {
+          _id: 0,
+          ProductName: 1,
+          UnitsOnOrder: 1,
+          UnitsInStock: 1,
+        },
+      },
+      { $sort: { ProductName: 1 } },
+    ])
+    .toArray();
+  return result;
 }
 
 /**
@@ -377,7 +454,35 @@ async function task_1_14(db) {
  *       https://docs.mongodb.com/manual/reference/operator/aggregation/dateFromString/
  */
 async function task_1_15(db) {
-  throw new Error('Not implemented');
+  const result = await db
+    .collection('orders')
+    .aggregate([
+      { $match: { OrderDate: /^1997/ } },
+      {
+        $group: {
+          _id: false,
+          January: { $sum: { $cond: [{ $eq: [{ $month: { $dateFromString: { dateString: '$OrderDate' } } }, 1] }, 1, 0] } },
+          February: { $sum: { $cond: [{ $eq: [{ $month: { $dateFromString: { dateString: '$OrderDate' } } }, 2] }, 1, 0] } },
+          March: { $sum: { $cond: [{ $eq: [{ $month: { $dateFromString: { dateString: '$OrderDate' } } }, 3] }, 1, 0] } },
+          April: { $sum: { $cond: [{ $eq: [{ $month: { $dateFromString: { dateString: '$OrderDate' } } }, 4] }, 1, 0] } },
+          May: { $sum: { $cond: [{ $eq: [{ $month: { $dateFromString: { dateString: '$OrderDate' } } }, 5] }, 1, 0] } },
+          June: { $sum: { $cond: [{ $eq: [{ $month: { $dateFromString: { dateString: '$OrderDate' } } }, 6] }, 1, 0] } },
+          July: { $sum: { $cond: [{ $eq: [{ $month: { $dateFromString: { dateString: '$OrderDate' } } }, 7] }, 1, 0] } },
+          August: { $sum: { $cond: [{ $eq: [{ $month: { $dateFromString: { dateString: '$OrderDate' } } }, 8] }, 1, 0] } },
+          September: { $sum: { $cond: [{ $eq: [{ $month: { $dateFromString: { dateString: '$OrderDate' } } }, 9] }, 1, 0] } },
+          October: { $sum: { $cond: [{ $eq: [{ $month: { $dateFromString: { dateString: '$OrderDate' } } }, 10] }, 1, 0] } },
+          November: { $sum: { $cond: [{ $eq: [{ $month: { $dateFromString: { dateString: '$OrderDate' } } }, 11] }, 1, 0] } },
+          December: { $sum: { $cond: [{ $eq: [{ $month: { $dateFromString: { dateString: '$OrderDate' } } }, 12] }, 1, 0] } },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ])
+    .toArray();
+  return result[0];
 }
 
 /**
@@ -386,7 +491,22 @@ async function task_1_15(db) {
  * Order by OrderID
  */
 async function task_1_16(db) {
-  throw new Error('Not implemented');
+  const result = await db
+    .collection('orders')
+    .aggregate([
+      { $match: { ShipPostalCode: { $ne: null } } },
+      {
+        $project: {
+          _id: 0,
+          OrderID: 1,
+          CustomerID: 1,
+          ShipCountry: 1,
+        },
+      },
+      { $sort: { OrderID: 1 } },
+    ])
+    .toArray();
+  return result;
 }
 
 /**
@@ -397,7 +517,35 @@ async function task_1_16(db) {
  *  - Round AvgPrice to MAX 2 decimal places
  */
 async function task_1_17(db) {
-  throw new Error('Not implemented');
+  const result = await db
+    .collection('products')
+    .aggregate([
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'CategoryID',
+          foreignField: 'CategoryID',
+          as: 'Categories',
+        },
+      },
+      { $unwind: '$Categories' },
+      {
+        $group: {
+          _id: '$Categories.CategoryName',
+          AveragePrice: { $avg: '$UnitPrice' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          CategoryName: '$_id',
+          AvgPrice: { $round: ['$AveragePrice', 2] },
+        },
+      },
+      { $sort: { AvgPrice: -1, CategoryName: 1 } },
+    ])
+    .toArray();
+  return result;
 }
 
 /**
@@ -412,7 +560,27 @@ async function task_1_17(db) {
  *       https://docs.mongodb.com/manual/reference/operator/aggregation/dateFromString/
  */
 async function task_1_18(db) {
-  throw new Error('Not implemented');
+  const result = await db
+    .collection('orders')
+    .aggregate([
+      { $match: { OrderDate: /^1998/ } },
+      {
+        $group: {
+          _id: { $dateToString: { date: { $dateFromString: { dateString: '$OrderDate' } }, format: '%Y-%m-%d' } },
+          TotalNumberOfOrders: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          'Order Date': '$_id',
+          'Total Number of Orders': '$TotalNumberOfOrders',
+        },
+      },
+      { $sort: { 'Order Date': 1 } },
+    ])
+    .toArray();
+  return result;
 }
 
 /**
