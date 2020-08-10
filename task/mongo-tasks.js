@@ -633,14 +633,15 @@ async function task_1_20(db) {
       {
         $group: {
           _id: '$Employees.EmployeeID',
-          'Employee Full Name': { $concat: ['$FirstName', ' ', '$LastName'] },
-          'Amount, $': { $sum: 1 },
+          'Employee Full Name': { $concat: ['$Employees.FirstName', ' ', '$Employees.LastName'] },
+          'Amount, $': { $sum: { $multiply: ['$Order-details.UnitPrice', '$Order-details.Quantity'] } },
         },
       },
       { $sort: { 'Amount, $': -1 } },
       {
         $project: {
-          _id: 1,
+          _id: 0,
+          EmployeeID: '$_id',
           'Employee Full Name': 1,
           'Amount, $': 1,
         },
@@ -656,8 +657,36 @@ async function task_1_20(db) {
  * | OrderID | Maximum Purchase Amount, $ |
  */
 async function task_1_21(db) {
-  throw new Error('Not implemented');
-  const result = await db.collection('orders').aggregate([]).toArray();
+  const result = await db
+    .collection('orders')
+    .aggregate([
+      {
+        $lookup: {
+          from: 'order-details',
+          localField: 'OrderID',
+          foreignField: 'OrderID',
+          as: 'Order-details',
+        },
+      },
+      { $unwind: '$Order-details' },
+      {
+        $group: {
+          _id: '$OrderID',
+          'Maximum Purchase Amount, $': { $sum: { $multiply: ['$Order-details.UnitPrice', '$Order-details.Quantity'] } },
+        },
+      },
+      { $sort: { 'Maximum Purchase Amount, $': -1 } },
+      {
+        $project: {
+          _id: 0,
+          OrderID: '$_id',
+          'Maximum Purchase Amount, $': 1,
+        },
+      },
+      { $limit: 1 },
+    ])
+    .toArray();
+  return result;
 }
 
 /**
