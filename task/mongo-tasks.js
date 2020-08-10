@@ -609,6 +609,46 @@ async function task_1_19(db) {
  */
 async function task_1_20(db) {
   throw new Error('Not implemented');
+  const result = await db
+    .collection('orders')
+    .aggregate([
+      {
+        $lookup: {
+          from: 'employees',
+          localField: 'EmployeeID',
+          foreignField: 'EmployeeID',
+          as: 'Employees',
+        },
+      },
+      { $unwind: '$Employees' },
+      {
+        $lookup: {
+          from: 'order-details',
+          localField: 'OrderID',
+          foreignField: 'OrderID',
+          as: 'Order-details',
+        },
+      },
+      { $unwind: '$Order-details' },
+      {
+        $group: {
+          _id: '$Employees.EmployeeID',
+          'Employee Full Name': { $concat: ['$FirstName', ' ', '$LastName'] },
+          'Amount, $': { $sum: 1 },
+        },
+      },
+      { $sort: { 'Amount, $': -1 } },
+      {
+        $project: {
+          _id: 1,
+          'Employee Full Name': 1,
+          'Amount, $': 1,
+        },
+      },
+      { $limit: 1 },
+    ])
+    .toArray();
+  return result;
 }
 
 /**
@@ -617,6 +657,7 @@ async function task_1_20(db) {
  */
 async function task_1_21(db) {
   throw new Error('Not implemented');
+  const result = await db.collection('orders').aggregate([]).toArray();
 }
 
 /**
