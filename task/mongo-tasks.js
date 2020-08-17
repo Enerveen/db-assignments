@@ -32,22 +32,20 @@ async function before(db) {
  */
 async function task_1_1(db) {
   // The first task is example, please follow the style in the next functions.
-  const result = await db
-    .collection('employees')
-    .aggregate([
-      {
+   // The first task is example, please follow the style in the next functions.
+   const result = await db.collection('employees').aggregate([
+    {
         $project: {
-          _id: 0,
-          EmployeeID: 1,
-          'Employee Full Name': { $concat: ['$FirstName', ' ', '$LastName'] },
-          Title: 1,
-          City: { $ifNull: ['$City', 'Unspecified'] },
-        },
-      },
-      { $sort: { City: 1, 'Employee Full Name': 1 } },
-    ])
-    .toArray();
-  return result;
+            _id: 0,
+            EmployeeID: 1,
+            "Employee Full Name": {$concat: ["$FirstName", " ", "$LastName"]},
+            Title: 1,
+            City: {$ifNull: ['$City', "Unspecified"]}
+        }
+    },
+    {$sort: {City: 1, "Employee Full Name": 1}}
+]).toArray();
+return result;
 }
 
 /**
@@ -803,5 +801,5 @@ module.exports = {
     task_1_19: task_1_19,
     task_1_20: task_1_20,
     task_1_21: task_1_21,
-    task_1_22: task_1_22,
+    task_1_22: task_1_22
 };
