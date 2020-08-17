@@ -610,7 +610,7 @@ async function task_1_19(db) {
           as: 'Order-Details',
         },
       },
-      { $unwind: '$OrderDetails' },
+      { $unwind: '$Order-Details' },
       {
         $group: {
           _id: '$CustomerID',
