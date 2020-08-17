@@ -21,7 +21,7 @@
  * Test timeout is increased to 15sec for the function.
  * */
 async function before(db) {
-  await db.collection('employees').ensureIndex({ CustomerID: 1 });
+  await db.collection('employees').ensureIndex({CustomerID: 1});
 }
 
 /**
@@ -32,20 +32,19 @@ async function before(db) {
  */
 async function task_1_1(db) {
   // The first task is example, please follow the style in the next functions.
-   // The first task is example, please follow the style in the next functions.
-   const result = await db.collection('employees').aggregate([
-    {
-        $project: {
-            _id: 0,
-            EmployeeID: 1,
-            "Employee Full Name": {$concat: ["$FirstName", " ", "$LastName"]},
-            Title: 1,
-            City: {$ifNull: ['$City', "Unspecified"]}
-        }
-    },
-    {$sort: {City: 1, "Employee Full Name": 1}}
-]).toArray();
-return result;
+  const result = await db.collection('employees').aggregate([
+      {
+          $project: {
+              _id: 0,
+              EmployeeID: 1,
+              "Employee Full Name": {$concat: ["$FirstName", " ", "$LastName"]},
+              Title: 1,
+              City: {$ifNull: ['$City', "Unspecified"]}
+          }
+      },
+      {$sort: {City: 1, "Employee Full Name": 1}}
+  ]).toArray();
+  return result;
 }
 
 /**
