@@ -607,14 +607,14 @@ async function task_1_19(db) {
           from: 'order-details',
           localField: 'OrderID',
           foreignField: 'OrderID',
-          as: 'OrderDetails',
+          as: 'Order-Details',
         },
       },
       { $unwind: '$OrderDetails' },
       {
         $group: {
           _id: '$CustomerID',
-          Amount: { $sum: { $multiply: ['$OrderDetails.UnitPrice', '$OrderDetails.Quantity'] } },
+          Amount: { $sum: { $multiply: ['$Order-Details.UnitPrice', '$Order-Details.Quantity'] } },
         },
       },
       {
