@@ -12,7 +12,6 @@
  *                                                                                          *
  ********************************************************************************************/
 
-
 /**
  *  Create a SQL query to return next data ordered by city and then by name:
  * | Employy Id | Employee Full Name | Title | City |
@@ -21,8 +20,8 @@
  *
  */
 async function task_1_1(db) {
-    // The first task is example, please follow the style in the next functions.
-    let result = await db.query(`
+  // The first task is example, please follow the style in the next functions.
+  let result = await db.query(`
         SELECT
            EmployeeID as "Employee Id",
            CONCAT(FirstName, ' ', LastName) AS "Employee Full Name",
@@ -31,7 +30,7 @@ async function task_1_1(db) {
         FROM Employees
         ORDER BY City, "Employee Full Name"
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -43,7 +42,7 @@ async function task_1_1(db) {
  *
  */
 async function task_1_2(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT
             OrderID AS 'Order Id',
             SUM(UnitPrice * Quantity) AS 'Order Total Price',
@@ -51,8 +50,8 @@ async function task_1_2(db) {
         FROM OrderDetails
         GROUP BY OrderID
         ORDER BY OrderID DESC;
-        `)
-        return result[0];
+        `);
+  return result[0];
 }
 
 /**
@@ -63,14 +62,14 @@ async function task_1_2(db) {
  *
  */
 async function task_1_3(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT 
             CustomerID AS 'CustomerId', 
             CompanyName AS 'CompanyName' 
         FROM Customers
         WHERE Country = 'USA' AND Fax IS NULL
-    `)
-    return result[0];
+    `);
+  return result[0];
 }
 
 /**
@@ -83,7 +82,7 @@ async function task_1_3(db) {
  *
  */
 async function task_1_4(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT
             CustomerID AS 'Customer Id',
             COUNT(OrderID) AS 'Total number of Orders',
@@ -92,7 +91,7 @@ async function task_1_4(db) {
         GROUP BY CustomerID
         ORDER BY \`% of all orders\` DESC, CustomerID ASC
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -103,7 +102,7 @@ async function task_1_4(db) {
  *
  */
 async function task_1_5(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT 
             ProductID AS 'ProductId',
             ProductName AS 'ProductName',
@@ -112,7 +111,7 @@ async function task_1_5(db) {
         WHERE ProductName REGEXP '^[A-F]'
         ORDER BY ProductName
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -125,7 +124,7 @@ async function task_1_5(db) {
  *
  */
 async function task_1_6(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT 
             Products.ProductName AS 'ProductName', 
             Categories.CategoryName AS 'CategoryName', 
@@ -135,7 +134,7 @@ async function task_1_6(db) {
         INNER JOIN Suppliers ON Suppliers.SupplierID = Products.SupplierID
         ORDER BY ProductName, SupplierCompanyName;
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -150,7 +149,7 @@ async function task_1_6(db) {
  *
  */
 async function task_1_7(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT
             a.EmployeeID AS 'EmployeeId',
             CONCAT(a.FirstName, ' ', a.LastName) as 'FullName',
@@ -158,7 +157,7 @@ async function task_1_7(db) {
         FROM Employees a 
         LEFT JOIN Employees b ON a.ReportsTo = b.EmployeeID;
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -170,7 +169,7 @@ async function task_1_7(db) {
  *
  */
 async function task_1_8(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT 
             Categories.CategoryName AS 'CategoryName',
             COUNT(Products.ProductID) AS 'TotalNumberOfProducts'
@@ -179,7 +178,7 @@ async function task_1_8(db) {
         GROUP BY CategoryName
         ORDER BY CategoryName;
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -191,14 +190,14 @@ async function task_1_8(db) {
  *
  */
 async function task_1_9(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT
             CustomerID AS 'CustomerID',
             ContactName AS 'ContactName'
         FROM Customers
         WHERE ContactName LIKE 'F__n%';
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -209,14 +208,14 @@ async function task_1_9(db) {
  *
  */
 async function task_1_10(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT
             ProductID as 'ProductID',
             ProductName as 'ProductName'
         FROM Products
         WHERE Discontinued = 1
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -229,7 +228,7 @@ async function task_1_10(db) {
  *
  */
 async function task_1_11(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT
             ProductName AS 'ProductName',
             UnitPrice AS 'UnitPrice'
@@ -237,7 +236,7 @@ async function task_1_11(db) {
         WHERE UnitPrice BETWEEN 5 AND 15
         ORDER BY UnitPrice, ProductName 
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -250,7 +249,7 @@ async function task_1_11(db) {
  *
  */
 async function task_1_12(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT
             ProductName AS 'ProductName',
             UnitPrice AS 'UnitPrice'
@@ -262,7 +261,7 @@ async function task_1_12(db) {
             ) subquery
         ORDER BY UnitPrice, ProductName  
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -273,13 +272,13 @@ async function task_1_12(db) {
  *
  */
 async function task_1_13(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT
             COUNT(ProductID) AS 'TotalOfCurrentProducts',
             COUNT(IF(Discontinued, 1, NULL)) AS 'TotalOfDiscontinuedProducts'
         FROM Products
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -290,7 +289,7 @@ async function task_1_13(db) {
  *
  */
 async function task_1_14(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT  
             ProductName AS 'ProductName',
             UnitsOnOrder AS 'UnitsOnOrder',
@@ -298,7 +297,7 @@ async function task_1_14(db) {
         FROM Products
         WHERE UnitsInStock < UnitsOnOrder;
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -309,7 +308,7 @@ async function task_1_14(db) {
  *
  */
 async function task_1_15(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT 
             COUNT(IF(MONTH(OrderDate) = 1, 1, NULL)) AS 'January',
             COUNT(IF(MONTH(OrderDate) = 2, 1, NULL)) AS 'February',
@@ -326,7 +325,7 @@ async function task_1_15(db) {
         FROM Orders
         WHERE YEAR(OrderDate) = 1997;
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -337,7 +336,7 @@ async function task_1_15(db) {
  *
  */
 async function task_1_16(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT
             OrderID AS 'OrderID',
             CustomerID AS 'CustomerID',
@@ -345,7 +344,7 @@ async function task_1_16(db) {
         FROM Orders
         WHERE ShipPostalCode IS NOT NULL
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -358,7 +357,7 @@ async function task_1_16(db) {
  *
  */
 async function task_1_17(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT 
             Categories.CategoryName AS 'CategoryName',
             AVG(UnitPrice) AS 'AvgPrice'
@@ -367,7 +366,7 @@ async function task_1_17(db) {
         GROUP BY CategoryName
         ORDER BY AvgPrice DESC, CategoryName;
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -379,7 +378,7 @@ async function task_1_17(db) {
  *
  */
 async function task_1_18(db) {
-    let result = await db.query(`
+  let result = await db.query(`
     SELECT 
         DATE_FORMAT(OrderDate, '%Y-%m-%d %T') AS 'OrderDate',
         COUNT(OrderID) AS 'Total Number of Orders' 
@@ -387,7 +386,7 @@ async function task_1_18(db) {
         GROUP BY OrderDate 
         ORDER BY OrderDate;
 `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -399,7 +398,7 @@ async function task_1_18(db) {
  *
  */
 async function task_1_19(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT 
             Orders.CustomerID AS 'CustomerID',
             Customers.CompanyName AS 'CompanyName',
@@ -411,7 +410,7 @@ async function task_1_19(db) {
         HAVING \`TotalOrdersAmount, $\` > 10000
         ORDER BY \`TotalOrdersAmount, $\` DESC, CustomerID ASC
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -423,7 +422,7 @@ async function task_1_19(db) {
  *
  */
 async function task_1_20(db) {
-    let result = await db.query(`
+  let result = await db.query(`
     SELECT 
         Orders.EmployeeID as 'EmployeeID',
     CONCAT(Employees.FirstName, ' ', Employees.LastName) AS 'Employee Full Name',
@@ -434,7 +433,7 @@ async function task_1_20(db) {
     GROUP BY Orders.EmployeeID 
     ORDER BY \`Amount, $\` DESC LIMIT 1;
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -444,7 +443,7 @@ async function task_1_20(db) {
  * @return {array}
  */
 async function task_1_21(db) {
-    let result = await db.query(`
+  let result = await db.query(`
     SELECT
         OrderID AS 'OrderID',
         SUM(UnitPrice*Quantity) AS 'Maximum Purchase Amount, $'
@@ -453,7 +452,7 @@ async function task_1_21(db) {
     ORDER BY \`Maximum Purchase Amount, $\` DESC
     LIMIT 1
     `);
-    return result[0];
+  return result[0];
 }
 
 /**
@@ -464,7 +463,7 @@ async function task_1_21(db) {
  * @return {array}
  */
 async function task_1_22(db) {
-    let result = await db.query(`
+  let result = await db.query(`
         SELECT DISTINCT
             a.CompanyName,
             Products.ProductName AS 'ProductName',
@@ -479,35 +478,34 @@ async function task_1_22(db) {
             FROM Customers b
             INNER JOIN Orders ON Orders.CustomerID = b.CustomerID
             INNER JOIN OrderDetails ON OrderDetails.OrderID = Orders.OrderID
-            WHERE b.CompanyName = a.CompanyName
+            WHERE b.CustomerID = a.CustomerID
         )
         ORDER BY PricePerItem DESC, CompanyName, ProductName;
     `);
-    return result[0];
+  return result[0];
 }
 
 module.exports = {
-    task_1_1: task_1_1,
-    task_1_2: task_1_2,
-    task_1_3: task_1_3,
-    task_1_4: task_1_4,
-    task_1_5: task_1_5,
-    task_1_6: task_1_6,
-    task_1_7: task_1_7,
-    task_1_8: task_1_8,
-    task_1_9: task_1_9,
-    task_1_10: task_1_10,
-    task_1_11: task_1_11,
-    task_1_12: task_1_12,
-    task_1_13: task_1_13,
-    task_1_14: task_1_14,
-    task_1_15: task_1_15,
-    task_1_16: task_1_16,
-    task_1_17: task_1_17,
-    task_1_18: task_1_18,
-    task_1_19: task_1_19,
-    task_1_20: task_1_20,
-    task_1_21: task_1_21,
-    task_1_22: task_1_22
+  task_1_1: task_1_1,
+  task_1_2: task_1_2,
+  task_1_3: task_1_3,
+  task_1_4: task_1_4,
+  task_1_5: task_1_5,
+  task_1_6: task_1_6,
+  task_1_7: task_1_7,
+  task_1_8: task_1_8,
+  task_1_9: task_1_9,
+  task_1_10: task_1_10,
+  task_1_11: task_1_11,
+  task_1_12: task_1_12,
+  task_1_13: task_1_13,
+  task_1_14: task_1_14,
+  task_1_15: task_1_15,
+  task_1_16: task_1_16,
+  task_1_17: task_1_17,
+  task_1_18: task_1_18,
+  task_1_19: task_1_19,
+  task_1_20: task_1_20,
+  task_1_21: task_1_21,
+  task_1_22: task_1_22,
 };
-
